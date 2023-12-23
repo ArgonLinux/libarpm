@@ -1,14 +1,18 @@
 import std/[strutils], ../io
 
 type
+  ## Contact addresses for a maintainer.
+  ## All of them are optional.
   Contacts* = ref object
     github*, mastodon*, email*, gitlab*: string
-
+  
+  ## A maintainer's data.
   Maintainer* = ref object
     realName*: string                        ## The maintainer's real name
     contacts*: Contacts                      ## The maintainer's contacts
 
-proc maintainer*(mStr: string): Maintainer =
+proc parseMaintainer*(mStr: string): Maintainer =
+  ## Parse a maintainer from a Argon maintainer "spec-compliant" string.
   var 
     curr: char
     pos: int
