@@ -20,6 +20,8 @@ type
     reason*: InstallationReason        ## Why was this package installed?
 
 proc compare*(package: Package, against: Package): ComparisonResult =
+  ## Compare a package against another one, and get the result.
+
   # Confirm that we're comparing the same packages other than the version.
   assert package.name == against.name, "Attempt to compare packages with different names."
   assert package.maintainer == against.maintainer, "Attempt to compare packages with different maintainers."
@@ -27,9 +29,9 @@ proc compare*(package: Package, against: Package): ComparisonResult =
   assert package.depends == against.depends, "Attempt to compare packages with different dependencies."
   assert package.provides == against.provides, "Attempt to compare packages with different dependents."
 
-  if package == against:
+  if package.version == against.version:
     return Same
-  elif package > against:
+  elif package.version > against.version:
     return Newer
   else:
     return Older
