@@ -1,4 +1,4 @@
-import semver, 
+import std/json, semver, 
        parsers/[licenses, maintainer]
 
 type
@@ -22,13 +22,18 @@ type
     license*: License                  ## The package's license
  
     depends*, provides*: seq[string]   ## What packages this depends upon and provides to
+    optionalDepends*: seq[string]      ## What does this package optionally depend upon
+
     metadata*: PackageMetadata         ## Other information
+    files*: seq[string]                ## Files belonging to this package.
 
 proc `=destroy`*(package: Package) =
   `=destroy`(package.name)
   `=destroy`(package.maintainer)
   `=destroy`(package.depends)
   `=destroy`(package.provides)
+  `=destroy`(package.optionalDepends)
+  `=destroy`(package.files)
 
 proc `=sink`*(dest: var PackageMetadata, src: PackageMetadata) =
   wasMoved(dest)
@@ -46,6 +51,8 @@ proc `=sink`*(dest: var Package, src: Package) =
   dest.depends = src.depends
   dest.provides = src.provides
   dest.metadata = src.metadata
+  dest.optionalDepends = src.optionalDepends
+  dest.files = src.files
 
   `=sink`(dest.metadata, src.metadata)
   `=destroy`(src)
@@ -71,12 +78,45 @@ proc compare*(package: Package, against: Package): ComparisonResult =
 
 proc package*(
   name, version, maintainer, license: string, 
-  depends, provides: seq[string] = @[]
+  depends, optionalDepends, provides, files: seq[string] = @[]
 ): Package =
   Package(
     name: name, 
     version: version.parseVersion(), 
     maintainer: maintainer.parseMaintainer(), 
     license: license.parseLicense(),
-    depends: depends, provides: provides
+    depends: depends, provides: provides, 
+    files: files, optionalDepends: optionalDepends
+  )
+
+proc package*(node: JsonNode): Package =
+  var
+    rawDepends = node["depends"].getElems()
+    rawProvides = node["provides"].getElems()
+    rawOptionalDepends = node["optional_depends"].getElems()
+    rawFiles = node["files"].getElems()
+
+    depends, provides, optionalDepends, files: seq[string]
+
+  for d in rawDepends:
+    depends.add getStr(d)
+
+  for p in rawProvides:
+    depends.add getStr(p)
+
+  for od in rawOptionalDepends:
+    optionalDepends.add getStr(od)
+
+  for f in rawFiles:
+    files.add getStr(f)
+
+  Package(
+    name: node["name"].getStr(),
+    version: node["version"].getStr().parseVersion(),
+    maintainer: node["maintainer"].getStr().parseMaintainer(),
+    license: node["license"].getStr().parseLicense(),
+    depends: depends,
+    provides: provides,
+    optionalDepends: optionalDepends,
+    files: files
   )

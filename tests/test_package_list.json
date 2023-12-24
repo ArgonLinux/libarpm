@@ -1,0 +1,23 @@
+{
+	"name": "main",
+	"revision_date": "23/12/2023 17:29:32",
+	"packages": [
+		{
+			"name": "linux",
+			"license": "GPL2",
+			"version": "6.6.7",
+			"maintainer": "Abhiraj Rik (github:abrik1)",
+			"depends": [
+				"gcc"
+			],
+			"optional_depends": [
+				"clang",
+				"ncurses"
+			],
+			"provides": ["linux", "kconfig"],
+			"files": [
+				"https://github.com/ArgonLinux/packages/linux/linux.zip"
+			]
+		}
+	]
+}
