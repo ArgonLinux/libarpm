@@ -15,18 +15,18 @@ const
 
 proc info*(msg: string) =
   ## Print an informational message
-  stdout.write INFO_COLOR & "INFO" & ' ' & RESET & BOLD & msg & '\n'
+  stdout.write INFO_COLOR & "INFO" & ' ' & RESET & BOLD & msg & RESET & '\n'
 
 proc error*(msg: string, quits: bool = false) =
   ## Print an error message.
-  stdout.write ERROR_COLOR & "ERR" & "  " & RESET & BOLD & msg & '\n'
+  stdout.write ERROR_COLOR & "ERR" & "  " & RESET & BOLD & msg & RESET & '\n'
 
   if quits:
     quit(1)
 
 proc warn*(msg: string) =
   ## Print a warning message.
-  stdout.write WARN_COLOR & "WARN" & ' ' & RESET & BOLD & msg & '\n'
+  stdout.write WARN_COLOR & "WARN" & ' ' & RESET & BOLD & msg & RESET & '\n'
 
 proc ask*(
   msg: string, 
