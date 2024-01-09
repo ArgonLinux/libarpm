@@ -6,4 +6,3 @@ let
 
 if installed.compare(new) == Older:
   info "We have an older package installed, replacing it with new one."
-
