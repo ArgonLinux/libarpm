@@ -58,14 +58,16 @@ proc newPackageList*(jstr: string): PackageList {.inline.} =
   newPackageList(parseJson(jstr))
 
 proc packageList*(refresh: bool = false): PackageList =
-  let file = getPackageList("main")
+  ## Instantiate a package list from either a pre-existing save, or from the repositories online.
+  if not refresh:
+    let file = getPackageList("main")
 
-  if file.isSome:
-    if not validateJson(file.get()):
-      error "Invalid package data saved, send this to Argon Linux maintainers ONLY if it isn't empty and you haven't manually tampered with it."
-      error("If you HAVE tampered with it, good job. You messed something up spectacularly. Run `arpm refresh --force` to re-fetch the list.", true)
+    if file.isSome:
+      if not validateJson(file.get()):
+        error "Invalid package data saved, send this to Argon Linux maintainers ONLY if it isn't empty and you haven't manually tampered with it."
+        error("If you HAVE tampered with it, good job. You messed something up spectacularly. Run `arpm refresh --force` to re-fetch the list.", true)
 
-    return newPackageList(file.get())
+      return newPackageList(file.get())
 
   let resp = httpGet(PKG_LIST_MIRROR)
 
@@ -81,6 +83,6 @@ proc packageList*(refresh: bool = false): PackageList =
     error "Invalid package data provided, send this to the Argon Linux maintainers if it isn't empty: "
     error resp.get()
 
-  writePackageList("main", PKG_LIST_MIRROR)
+  writePackageList("main", resp.get())
   
   return newPackageList(resp.get())
