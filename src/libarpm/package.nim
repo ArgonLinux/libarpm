@@ -6,11 +6,6 @@ type
     Direct                             ## This package was installed directly by the user.
     Indirect                           ## This package was installed as a dependency of another package.
 
-  ComparisonResult* = enum
-    Older
-    Newer
-    Same
-
   PackageMetadata* = object
     reason*: InstallationReason        ## Why was this package installed?
     freedom*: FreedomType              ## What freedom does this package give you?
@@ -58,28 +53,53 @@ proc `=sink`*(dest: var Package, src: Package) =
   `=destroy`(src)
 
 proc isLibre*(package: Package): bool {.inline.} =
+  ## Check if this package is libre (or as the FSF calls it, free as in freedom, not as in free beer).
+  ##
+  ## **See also:**
+  ## * `isOss proc`_
+  ## * `isProprietary proc`_
   isLibre package.license
 
 proc isOss*(package: Package): bool {.inline.} =
+  ## Check if this package is open source software (there is a clear distinction between OSS and libre, go check it out.)
+  ##
+  ## **See also:**
+  ## * `isProprietary proc`_
+  ## * `isLibre proc`_
   isOss package.license
 
 proc isProprietary*(package: Package): bool {.inline.} =
+  ## Check if this package is proprietary (i.e, it was not compiled by Argon developers and only the authors have the source code and 
+  ## they reserve certain rights to it.)
+  ##
+  ## **See also:**
+  ## * `isLibre proc`_
+  ## * `isOss proc`_
   isProprietary package.license
 
-proc compare*(package: Package, against: Package): ComparisonResult =
-  ## Compare a package against another one, and get the result.
+proc `>`*(package: Package, against: Package): bool {.inline.} =
+  package.version > against.version
 
-  if package.version == against.version:
-    return Same
-  elif package.version > against.version:
-    return Newer
-  else:
-    return Older
+proc `<`*(package: Package, against: Package): bool {.inline.} =
+  package.version < against.version
+
+proc `>=`*(package: Package, against: Package): bool {.inline.} =
+  package.version >= against.version
+
+proc `<=`*(package: Package, against: Package): bool {.inline.} =
+  package.version <= against.version
+
+proc `==`*(package: Package, against: Package): bool {.inline.} =
+  package.version == against.version
 
 proc package*(
   name, version, maintainer, license: string, 
   depends, optionalDepends, provides, files: seq[string] = @[]
 ): Package =
+  ## Create a new `Package`
+  ##
+  ## **See also:**
+  ## * `package proc`_ to create a `Package` from a `JsonNode`
   Package(
     name: name, 
     version: version.parseVersion(), 
@@ -90,6 +110,11 @@ proc package*(
   )
 
 proc package*(node: JsonNode): Package =
+  ## Create a new `Package` from a `JsonNode`, given that it has all the elements needed.
+  ## If those elements are not present, an error will be raised.
+  ##
+  ## **See also:**
+  ## * `package proc`_ to create a `Package` from a bunch of strings and string sequences
   var
     rawDepends = node["depends"].getElems()
     rawProvides = node["provides"].getElems()
