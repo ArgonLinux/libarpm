@@ -1,3 +1,5 @@
+## Input/output module for libarpm and **optionally** all programs that use it.
+
 import std/[rdstdin, colors, strutils]
 
 const
@@ -14,11 +16,13 @@ const
   RESET* = "\e[0m"
 
 proc info*(msg: string) =
-  ## Print an informational message
+  ## Print an informational message.
   stdout.write INFO_COLOR & "INFO" & ' ' & RESET & BOLD & msg & RESET & '\n'
 
 proc error*(msg: string, quits: bool = false) =
   ## Print an error message.
+  ##
+  ## Optionally, the program can also be forced to quit.
   stdout.write ERROR_COLOR & "ERR" & "  " & RESET & BOLD & msg & RESET & '\n'
 
   if quits:
@@ -64,6 +68,14 @@ proc ask*(
       return ask(msg, options, retryCount, caseSensitive, arpmRetryCount+1'u64)
     else:
       error("Maximum retries exceeded!", true)
+
+proc ask*(
+  msg: string
+): string {.inline.} =
+  ## Ask a question with any arbitrary input
+  readLineFromStdin(
+    YELLOW & ".... " & RESET & BOLD & msg & RESET & ": "
+  )
 
 proc confirm*(
   msg: string,
