@@ -1,5 +1,7 @@
 import std/[strutils, times, json], package
 
+const PKG_LIST_MIRROR {.strdefine.} = ""
+
 type
   PackageList* = ref object
     name*: string
