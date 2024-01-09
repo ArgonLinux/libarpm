@@ -106,7 +106,7 @@ proc parseMaintainer*(mStr: string): Maintainer =
       of "mstdn", "mastodon", "fedi":
         contacts.mastodon &= curr
       else:
-        error("While parsing contact: invalid contact method: " & cContactMeth)
+        error("While parsing contact: invalid contact method: " & cContactMeth, true)
 
     inc pos
   
