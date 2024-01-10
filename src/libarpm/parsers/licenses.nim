@@ -37,6 +37,32 @@ const
     Proprietary: NonFree
   }.toTable
 
+proc `$`*(license: License): string =
+  ## Turn a license into a string
+  case license
+  of GPL2:
+    return "GPL2"
+  of GPL3:
+    return "GPL3"
+  of MIT:
+    return "MIT"
+  of BSD3:
+    return "BSD3"
+  of WTFPL:
+    return "WTFPL"
+  of Proprietary:
+    return "Proprietary"
+  of OSS:
+    return "OSS"
+  of MPL:
+    return "MPL"
+  of LGPL2:
+    return "LGPL2"
+  of LGPL3:
+    return LGPL3
+  of Unlicense:
+    return "Unlicense"
+
 proc parseLicense*(license: string): License =
   ## "Parse" a license, get an enum if it's valid.
   case license.toLowerAscii()

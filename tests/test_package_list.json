@@ -15,8 +15,30 @@
 				"ncurses"
 			],
 			"provides": ["linux", "kconfig"],
+			"files": []
+		},
+		{
+			"name": "trayfetch",
+			"license": "GPL2",
+			"version": "0.1.0",
+			"maintainer": "Trayambak Rai (mail:trayambakrai@proton.me,github:xTrayambak)",
+			"depends": [],
+			"optional_depends": [],
+			"provides": ["trayfetch"],
 			"files": [
-				"https://github.com/ArgonLinux/packages/linux/linux.zip"
+				"/usr/bin/trayfetch"
+			]
+		},
+		{
+			"name": "neofetch",
+			"license": "MIT",
+			"version": "7.1.0",
+			"maintainer": "Abhiraj Rik (github:abrik1)",
+			"depends": ["bash"],
+			"optional_depends": [],
+			"provides": ["neofetch"],
+			"files": [
+				"/usr/bin/neofetch"
 			]
 		}
 	]

@@ -42,7 +42,7 @@ proc ask*(
 ): int =
   ## Ask a question with two options.
   var answer = readLineFromStdin(
-    YELLOW & ".... " & RESET & BOLD & msg & RESET & " [" & GREEN & options[0].toLowerAscii() & RESET & '/' & RED & options[1].toUpperAscii() & RESET & "] "
+    YELLOW & " ... " & RESET & BOLD & msg & RESET & " [" & GREEN & options[0].toLowerAscii() & RESET & '/' & RED & options[1].toUpperAscii() & RESET & "] "
   )
 
   if not caseSensitive:
@@ -74,8 +74,8 @@ proc ask*(
 ): string {.inline.} =
   ## Ask a question with any arbitrary input
   readLineFromStdin(
-    YELLOW & ".... " & RESET & BOLD & msg & RESET & ": "
-  )
+    YELLOW & " ... " & RESET & BOLD & msg & RESET & ": "
+  ) 
 
 proc confirm*(
   msg: string,

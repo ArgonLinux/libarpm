@@ -16,7 +16,7 @@ proc httpGet*(url: string): Option[string] =
     error "Server responded with non-200 response code: " & $resp.code.int
     return none(string)
 
-  info "Request succeeded in " & $((start - cpuTime())) & " ms!"
+  info "Request succeeded in " & $((cpuTime()-start)) & " ms!"
   return some(resp.bodyStream.readAll())
 
 proc validateJson*(jstr: string): bool {.inline.} =
