@@ -1,8 +1,19 @@
 ## Helpful functions
 
-import std/[os, times, options, httpclient, streams, json], ./io
+import std/[os, times, options, httpclient, streams, json], ./io, semver
 
 const NimblePkgVersion {.strdefine.} = "???"
+
+proc `$`*(ver: Version): string =
+  ## Convert a semantic version into a nice looking string
+
+  result = GREEN & ver.major & RESET & BOLD & '.' & RESET & GREEN & ver.minor & RESET & BOLD & '.' & RESET & GREEN & ver.patch & RESET
+
+  if ver.build.len > 0:
+    result &= BOLD & '-' & RESET & YELLOW & ver.build & RESET
+
+  if ver.metadata.len > 0:
+    result &= BOLD & ':' & RESET & YELLOW & ver.metadata & RESET
 
 proc httpGet*(url: string): Option[string] =
   ## Get HTTP content from a URL.
