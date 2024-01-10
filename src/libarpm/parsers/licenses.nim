@@ -59,7 +59,7 @@ proc `$`*(license: License): string =
   of LGPL2:
     return "LGPL2"
   of LGPL3:
-    return LGPL3
+    return "LGPL3"
   of Unlicense:
     return "Unlicense"
 
