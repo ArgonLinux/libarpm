@@ -15,16 +15,16 @@ proc `$`*(maintainer: Maintainer): string =
   result &= YELLOW & maintainer.realName & RESET
 
   if maintainer.contacts.github.len > 0:
-    result &= "\n\t* " & BLUE & "GitHub: " & RESET & BOLD & maintainer.contacts.github & RESET
+    result &= "\n\t* " & GREEN & "GitHub: " & RESET & BOLD & maintainer.contacts.github & RESET
 
   if maintainer.contacts.mastodon.len > 0:
-    result &= "\n\t* " & BLUE & "Mastodon: " & RESET & BOLD & maintainer.contacts.mastodon & RESET
+    result &= "\n\t* " & GREEN & "Mastodon: " & RESET & BOLD & maintainer.contacts.mastodon & RESET
 
   if maintainer.contacts.email.len > 0:
-    result &= "\n\t* " & BLUE & "E-Mail: " & RESET & BOLD & maintainer.contacts.email & RESET
+    result &= "\n\t* " & GREEN & "E-Mail: " & RESET & BOLD & maintainer.contacts.email & RESET
 
   if maintainer.contacts.gitlab.len > 0:
-    result &= "\n\t* " & BLUE & "Gitlab: " & RESET & BOLD & maintainer.contacts.gitlab & RESET
+    result &= "\n\t* " & GREEN & "Gitlab: " & RESET & BOLD & maintainer.contacts.gitlab & RESET
 
 proc `=destroy`*(contacts: Contacts) =
   `=destroy`(contacts.github)
