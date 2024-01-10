@@ -52,7 +52,7 @@ proc `$`*(license: License): string =
     return "WTFPL"
   of Proprietary:
     return "Proprietary"
-  of OSS:
+  of OtherFree:
     return "OSS"
   of MPL:
     return "MPL"
