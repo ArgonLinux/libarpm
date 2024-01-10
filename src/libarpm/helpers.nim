@@ -7,7 +7,7 @@ const NimblePkgVersion {.strdefine.} = "???"
 proc `$`*(ver: Version): string =
   ## Convert a semantic version into a nice looking string
 
-  result = GREEN & ver.major & RESET & BOLD & '.' & RESET & GREEN & ver.minor & RESET & BOLD & '.' & RESET & GREEN & ver.patch & RESET
+  result = GREEN & $ver.major & RESET & BOLD & '.' & RESET & GREEN & $ver.minor & RESET & BOLD & '.' & RESET & GREEN & $ver.patch & RESET
 
   if ver.build.len > 0:
     result &= BOLD & '-' & RESET & YELLOW & ver.build & RESET
