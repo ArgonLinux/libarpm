@@ -55,9 +55,9 @@ proc version*(data: JsonNode): Version =
   ## Create a semantic version from a JSON Node
 
   let
-    major = data["major"].getStr().parseInt()
-    minor = data["minor"].getStr().parseInt()
-    patch = data["patch"].getStr().parseInt()
+    major = data["major"].getInt()
+    minor = data["minor"].getInt()
+    patch = data["patch"].getInt()
 
     build = data["build"].getStr()
     metadata = data["metadata"].getStr()
