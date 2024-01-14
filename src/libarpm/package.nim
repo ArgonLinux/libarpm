@@ -1,6 +1,8 @@
-import std/json, semver, 
+import std/[strutils, json], 
        parsers/[licenses, maintainer],
        ./helpers
+
+import semver except `$`
 
 type
   InstallationReason* = enum
@@ -18,10 +20,13 @@ type
     license*: License                  ## The package's license
  
     depends*, provides*: seq[string]   ## What packages this depends upon and provides to
-    optionalDepends*: seq[string]      ## What does this package optionally depend upon
+    optional_depends*: seq[string]      ## What does this package optionally depend upon
 
     metadata*: PackageMetadata         ## Other information
     files*: seq[string]                ## Files belonging to this package.
+
+proc toJson*(package: Package): string =
+  pretty (%* package)
 
 proc `=destroy`*(package: Package) =
   `=destroy`(package.name)

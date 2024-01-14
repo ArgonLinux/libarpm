@@ -8,7 +8,7 @@ type
   
   ## A maintainer's data.
   Maintainer* = object
-    realName*: string                        ## The maintainer's real name
+    real_name*: string                        ## The maintainer's real name
     contacts*: Contacts                      ## The maintainer's contacts
 
 proc `$`*(maintainer: Maintainer): string =
