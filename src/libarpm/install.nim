@@ -6,7 +6,7 @@ const
 proc install*(package: Package, force: bool = false) =
   let url = BASE_BINPKG_REPO & package.name & ".zip"
 
-  if isPackageInstalled(package.name):
+  if isPackageInstalled(package.name) and not force:
     info "Package is already installed. Use `--force` if you want to reinstall it."
     return
 
