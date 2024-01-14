@@ -118,10 +118,15 @@ proc package*(node: JsonNode): Package =
   var
     rawDepends = node["depends"].getElems()
     rawProvides = node["provides"].getElems()
-    rawOptionalDepends = node["optional_depends"].getElems()
+    rawOptionalDepends: seq[JsonNode] 
     rawFiles = node["files"].getElems()
 
     depends, provides, optionalDepends, files: seq[string]
+
+  if "optional_depends" in node:
+    rawOptionalDepends = node["optional_depends"].getElems()
+  elif "optionalDepends" in node:
+    rawOptionalDepends = node["optionalDepends"].getElems()
 
   for d in rawDepends:
     depends.add getStr(d)
