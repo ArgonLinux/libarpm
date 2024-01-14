@@ -2,7 +2,9 @@
 
 import std/[os, times, options, httpclient, streams, json], ./io, semver
 
-const NimblePkgVersion {.strdefine.} = "???"
+const 
+  NimblePkgVersion {.strdefine.} = "???"
+  LibarpmVersion* = NimblePkgVersion
 
 proc `$`*(ver: Version): string =
   ## Convert a semantic version into a nice looking string
@@ -29,6 +31,15 @@ proc httpGet*(url: string): Option[string] =
 
   info "Request succeeded in " & $((cpuTime()-start)) & " ms!"
   return some(resp.bodyStream.readAll())
+
+proc urlExists*(url: string): bool =
+  ## Check if an endpoint returns 200
+  let httpClient = newHttpClient(userAgent="libarpm/" & NimblePkgVersion)
+
+  let resp = httpClient.get(url)
+  
+  echo resp.code.int
+  resp.code.int == 200
 
 proc validateJson*(jstr: string): bool {.inline.} =
   ## Find out if a JSON string is valid, or not. This just works by catching a `JsonParsingError`
