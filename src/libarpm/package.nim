@@ -151,7 +151,7 @@ proc package*(node: JsonNode): Package =
 
   Package(
     name: node["name"].getStr(),
-    version: node["version"].getStr().parseVersion(),
+    version: version,
     maintainer: node["maintainer"].getStr().parseMaintainer(),
     license: node["license"].getStr().parseLicense(),
     depends: depends,
