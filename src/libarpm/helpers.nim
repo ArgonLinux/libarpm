@@ -1,6 +1,6 @@
 ## Helpful functions
 
-import std/[os, times, options, httpclient, streams, json], ./io, semver
+import std/[os, times, options, httpclient, streams, strutils, json], ./io, semver
 
 const 
   NimblePkgVersion {.strdefine.} = "???"
@@ -50,6 +50,24 @@ proc validateJson*(jstr: string): bool {.inline.} =
   except JsonParsingError as exc:
     warn "validateJson(): caught a JsonParsingError: " & exc.msg
     return false
+
+proc version*(data: JsonNode): Version =
+  ## Create a semantic version from a JSON Node
+
+  let
+    major = data["major"].getStr().parseInt()
+    minor = data["minor"].getStr().parseInt()
+    patch = data["patch"].getStr().parseInt()
+
+    build = data["build"].getStr()
+    metadata = data["metadata"].getStr()
+
+  newVersion(
+    major,
+    minor,
+    patch,
+    build, metadata
+  )
 
 template root*(body: untyped) =
   ## This pragma ensures that any function it is attached to will not run, unless the process is privileged.

@@ -1,5 +1,6 @@
 import std/json, semver, 
-       parsers/[licenses, maintainer]
+       parsers/[licenses, maintainer],
+       ./helpers
 
 type
   InstallationReason* = enum
@@ -121,7 +122,15 @@ proc package*(node: JsonNode): Package =
     rawOptionalDepends: seq[JsonNode] 
     rawFiles = node["files"].getElems()
 
+    rawVersion = node["version"]
+    version: Version
+
     depends, provides, optionalDepends, files: seq[string]
+
+  try:
+    version = rawVersion.getStr().parseVersion()
+  except ParseError:
+    version = rawVersion.version()
 
   if "optional_depends" in node:
     rawOptionalDepends = node["optional_depends"].getElems()
