@@ -48,4 +48,7 @@ proc install*(package: Package, force: bool = false) =
       info("Copying file: \"" & prefix / real & "\" to \"" & file & '\"')
       copyFile(prefix / real, file)
 
+      # TODO: this is incredibly stupid, but it works.
+      setFilePermissions(file, [fpUserExec, fpGroupExec, fpOthersExec])
+
   markAsInstalled(package)
