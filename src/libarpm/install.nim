@@ -1,4 +1,4 @@
-import std/[os, options, strutils, tempfiles], ./[io, storage, package_list, package, helpers], zippy/ziparchives
+import std/[os, options, strutils, tempfiles, posix], ./[io, storage, package_list, package, helpers], zippy/ziparchives
 
 const
   BASE_BINPKG_REPO {.strdefine.} = "https://raw.githubusercontent.com/ArgonLinux/bin-packages/master/gen-bin/"
@@ -49,6 +49,7 @@ proc install*(package: Package, force: bool = false) =
       copyFile(prefix / real, file)
 
       # TODO: this is incredibly stupid, but it works.
-      setFilePermissions(file, {fpUserExec, fpGroupExec, fpOthersExec})
+      if chmod(file, S_IRUSR or S_IWUSR or S_IXUSR or S_IRGRP or S_IWGRP or S_IXGRP or S_IROTH or S_IWOTH or S_IXOTH) != 0:
+        error("Failed to modify permissions for package file: " & file, true)
 
   markAsInstalled(package)
