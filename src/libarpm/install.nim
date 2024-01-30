@@ -49,7 +49,7 @@ proc install*(package: Package, force: bool = false) =
       copyFile(prefix / real, file)
 
       # TODO: this is incredibly stupid, but it works.
-      if chmod(file, S_IRUSR or S_IWUSR or S_IXUSR or S_IRGRP or S_IWGRP or S_IXGRP or S_IROTH or S_IWOTH or S_IXOTH) != 0:
+      if chmod(file, (S_IRUSR or S_IWUSR or S_IXUSR or S_IRGRP or S_IWGRP or S_IXGRP or S_IROTH or S_IWOTH or S_IXOTH).cint) != 0:
         error("Failed to modify permissions for package file: " & file, true)
 
   markAsInstalled(package)
