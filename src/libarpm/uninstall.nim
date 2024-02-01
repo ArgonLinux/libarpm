@@ -1,4 +1,4 @@
-import std/[json], ./[storage, io, helpers]
+import std/[json], ./[storage, io, helpers, package, package_list]
 
 proc uninstall*(package: Package, force, refresh: bool = false) =
   # TODO: should we reeaaaallly provide an option to force deletion of a package, even if it means breaking the system? o_O
