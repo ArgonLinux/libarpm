@@ -46,7 +46,6 @@ proc install*(package: Package, force: bool = false) =
     error("Empty package build: no directories found!", true)
 
   let prefix = get dirs
-  info "thing: " & prefix
   
   for file in package.files:
     let
