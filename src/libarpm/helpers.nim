@@ -17,6 +17,17 @@ proc `$`*(ver: Version): string =
   if ver.metadata.len > 0:
     result &= BOLD & ':' & RESET & YELLOW & ver.metadata & RESET
 
+proc redString*(ver: Version): string =
+  ## Convert a semantic version into an evil looking string D:
+
+  result = RED & $ver.major & RESET & BOLD & '.' & RESET & RED & $ver.minor & RESET & BOLD & '.' & RESET & RED & $ver.patch & RESET
+
+  if ver.build.len > 0:
+    result &= BOLD & '-' & RESET & YELLOW & ver.build & RESET
+
+  if ver.metadata.len > 0:
+    result &= BOLD & ':' & RESET & YELLOW & ver.metadata & RESET
+
 proc httpGet*(url: string): Option[string] =
   ## Get HTTP content from a URL.
   let start = cpuTime()
