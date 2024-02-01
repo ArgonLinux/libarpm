@@ -40,7 +40,7 @@ proc install*(package: Package, force: bool = false) =
   info "Extracting contents of zipfile: " & path
   extractAll(path, dir / "files")
 
-  let prefix = dir / "files" / getFirstDirectory(dir / "files")
+  let prefix = dir / "files" / getFirstDirectory(dir / "files").get()
   
   for file in package.files:
     let
