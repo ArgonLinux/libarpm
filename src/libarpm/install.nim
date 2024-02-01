@@ -1,4 +1,4 @@
-import std/[os, options, strutils, tempfiles, posix], ./[io, storage, package_list, package, helpers], zippy/ziparchives
+import std/[os, options, strutils, tempfiles, posix, strutils], ./[io, storage, package_list, package, helpers], zippy/ziparchives
 
 const
   BASE_BINPKG_REPO {.strdefine.} = "https://raw.githubusercontent.com/ArgonLinux/bin-packages/master/gen-bin/"
@@ -7,7 +7,9 @@ proc getFirstDirectory*(dir: string): Option[string] =
   for kind, path in walkDir(dir):
     if kind != pcDir: continue
 
-    return some(path)
+    let stripped = path.split('\n')
+
+    return stripped[stripped.len-1].some()
 
 proc install*(package: Package, force: bool = false) =
   let url = BASE_BINPKG_REPO & package.name & ".zip"
