@@ -41,6 +41,7 @@ proc install*(package: Package, force: bool = false) =
   extractAll(path, dir / "files")
 
   let prefix = dir / "files" / getFirstDirectory(dir / "files").get()
+  info "thing: " & prefix
   
   for file in package.files:
     let
