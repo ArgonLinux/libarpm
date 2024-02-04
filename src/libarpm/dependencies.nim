@@ -17,6 +17,8 @@ proc solveDependencies*(
       subpkg
     )
 
+    info(package.name & " -> " & subpkg.name)
+
     let subdeps = solveDependencies(subpkg, list)
 
     deps &= subdeps
