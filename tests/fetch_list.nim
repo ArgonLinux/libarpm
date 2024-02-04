@@ -2,6 +2,6 @@
 
 import libarpm/package_list, pretty
 
-let list = packageList(refresh=true)
+let list = packageList(refresh = true)
 
 print list

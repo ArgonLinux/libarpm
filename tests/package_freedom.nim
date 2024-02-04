@@ -1,12 +1,12 @@
 # RAHHHHH WHAT IS A KILOMETER!?!?!?
 import libarpm
 
-var pkg = package(
-  "epic_gamer_package",
-  "1.33.7",
-  "Trayambak Rai (mail:trayambakrai@proton.me)",
-  "GPL3"
-)
+var
+  pkg =
+    package(
+      "epic_gamer_package", "1.33.7", "Trayambak Rai (mail:trayambakrai@proton.me)",
+      "GPL3"
+    )
 
 assert pkg.isLibre()
 

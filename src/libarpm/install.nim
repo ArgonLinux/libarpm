@@ -18,7 +18,7 @@ proc install*(
   package: Package, 
   force: bool = false,
   list: PackageList = packageList(),
-  reason: InstallationReason
+  reason: InstallationReason = Direct
 ) =
   let url = BASE_BINPKG_REPO & package.name & ".zip"
 
