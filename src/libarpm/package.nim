@@ -1,32 +1,30 @@
-import std/[strutils, json], 
-       parsers/[licenses, maintainer],
-       ./helpers
+import std/[strutils, json], parsers/[licenses, maintainer], ./helpers
 
 import semver except `$`
 
 type
   InstallationReason* = enum
-    Direct                             ## This package was installed directly by the user.
-    Indirect                           ## This package was installed as a dependency of another package.
+    Direct ## This package was installed directly by the user.
+    Indirect ## This package was installed as a dependency of another package.
 
   PackageMetadata* = object
-    reason*: InstallationReason        ## Why was this package installed?
-    freedom*: FreedomType              ## What freedom does this package give you?
+    reason*: InstallationReason ## Why was this package installed?
+    freedom*: FreedomType ## What freedom does this package give you?
 
   Package* = object
-    name*: string                      ## The package's name
-    version*: Version                  ## The package's semantic version
-    maintainer*: Maintainer            ## The package's maintainer on Argon
-    license*: License                  ## The package's license
- 
-    depends*, provides*: seq[string]   ## What packages this depends upon and provides to
-    optional_depends*: seq[string]      ## What does this package optionally depend upon
+    name*: string ## The package's name
+    version*: Version ## The package's semantic version
+    maintainer*: Maintainer ## The package's maintainer on Argon
+    license*: License ## The package's license
 
-    metadata*: PackageMetadata         ## Other information
-    files*: seq[string]                ## Files belonging to this package.
+    depends*, provides*: seq[string] ## What packages this depends upon and provides to
+    optional_depends*: seq[string] ## What does this package optionally depend upon
+
+    metadata*: PackageMetadata ## Other information
+    files*: seq[string] ## Files belonging to this package.
 
 proc toJson*(package: Package): string =
-  pretty (%* package)
+  pretty (%*package)
 
 proc `=destroy`*(package: Package) =
   `=destroy`(package.name)
@@ -99,20 +97,22 @@ proc `==`*(package: Package, against: Package): bool {.inline.} =
   package.version == against.version
 
 proc package*(
-  name, version, maintainer, license: string, 
-  depends, optionalDepends, provides, files: seq[string] = @[]
+    name, version, maintainer, license: string,
+    depends, optionalDepends, provides, files: seq[string] = @[],
 ): Package =
   ## Create a new `Package`
   ##
   ## **See also:**
   ## * `package proc`_ to create a `Package` from a `JsonNode`
   Package(
-    name: name, 
-    version: version.parseVersion(), 
-    maintainer: maintainer.parseMaintainer(), 
+    name: name,
+    version: version.parseVersion(),
+    maintainer: maintainer.parseMaintainer(),
     license: license.parseLicense(),
-    depends: depends, provides: provides, 
-    files: files, optionalDepends: optionalDepends
+    depends: depends,
+    provides: provides,
+    files: files,
+    optionalDepends: optionalDepends,
   )
 
 proc package*(node: JsonNode): Package =
@@ -124,7 +124,7 @@ proc package*(node: JsonNode): Package =
   var
     rawDepends = node["depends"].getElems()
     rawProvides = node["provides"].getElems()
-    rawOptionalDepends: seq[JsonNode] 
+    rawOptionalDepends: seq[JsonNode]
     rawFiles = node["files"].getElems()
 
     rawVersion = node["version"]
@@ -162,5 +162,5 @@ proc package*(node: JsonNode): Package =
     depends: depends,
     provides: provides,
     optionalDepends: optionalDepends,
-    files: files
+    files: files,
   )

@@ -5,26 +5,31 @@ type
   ## All of them are optional.
   Contacts* = object
     github*, mastodon*, email*, gitlab*: string
-  
+
   ## A maintainer's data.
   Maintainer* = object
-    real_name*: string                        ## The maintainer's real name
-    contacts*: Contacts                      ## The maintainer's contacts
+    real_name*: string ## The maintainer's real name
+    contacts*: Contacts ## The maintainer's contacts
 
 proc `$`*(maintainer: Maintainer): string =
   result &= YELLOW & maintainer.realName & RESET
 
   if maintainer.contacts.github.len > 0:
-    result &= "\n\t* " & GREEN & "GitHub: " & RESET & BOLD & maintainer.contacts.github & RESET
+    result &=
+      "\n\t* " & GREEN & "GitHub: " & RESET & BOLD & maintainer.contacts.github & RESET
 
   if maintainer.contacts.mastodon.len > 0:
-    result &= "\n\t* " & GREEN & "Mastodon: " & RESET & BOLD & maintainer.contacts.mastodon & RESET
+    result &=
+      "\n\t* " & GREEN & "Mastodon: " & RESET & BOLD & maintainer.contacts.mastodon &
+      RESET
 
   if maintainer.contacts.email.len > 0:
-    result &= "\n\t* " & GREEN & "E-Mail: " & RESET & BOLD & maintainer.contacts.email & RESET
+    result &=
+      "\n\t* " & GREEN & "E-Mail: " & RESET & BOLD & maintainer.contacts.email & RESET
 
   if maintainer.contacts.gitlab.len > 0:
-    result &= "\n\t* " & GREEN & "Gitlab: " & RESET & BOLD & maintainer.contacts.gitlab & RESET
+    result &=
+      "\n\t* " & GREEN & "Gitlab: " & RESET & BOLD & maintainer.contacts.gitlab & RESET
 
 proc `=destroy`*(contacts: Contacts) =
   `=destroy`(contacts.github)
@@ -59,7 +64,7 @@ proc parseMaintainer*(mStr: string): Maintainer =
   ## <real name> (<contact_form_1>:<contact_address_1>,<contact_form_2>:<contact_address_2>) and so on, and so forth.
   ##
   ## Currently, only GitHub, Mastodon, Email and GitLab are supported.
-  var 
+  var
     curr: char
     pos: int
 
@@ -71,23 +76,26 @@ proc parseMaintainer*(mStr: string): Maintainer =
 
   while curr != '(':
     curr = mStr[pos]
-    
+
     # well, this is stupid.
     if curr == '(':
       inc pos
-      realName = realName[0..realName.len-2]
+      realName = realName[0..realName.len - 2]
       break
-    
+
     realName &= curr
 
     if pos >= mStr.len:
-      error("While parsing maintainer string: expected atleast 1 contact source, got EOF.", true)
+      error(
+        "While parsing maintainer string: expected atleast 1 contact source, got EOF.",
+        true
+      )
 
     inc pos
 
   while curr != ')':
     curr = mStr[pos]
-    
+
     # this too, is fairly asanine.
     if curr == ')':
       inc pos
@@ -96,7 +104,7 @@ proc parseMaintainer*(mStr: string): Maintainer =
     if curr == ':':
       if cContactMeth.len < 1:
         error("While parsing contact: got no method name, got '@' instead.", true)
-      
+
       cContactMeth = toLowerAscii(cContactMeth)
       cContactMethDone = true
       inc pos
@@ -107,7 +115,7 @@ proc parseMaintainer*(mStr: string): Maintainer =
       reset cContactMeth
       inc pos
       continue
-    
+
     if not cContactMethDone:
       cContactMeth &= curr
     else:
@@ -124,8 +132,5 @@ proc parseMaintainer*(mStr: string): Maintainer =
         error("While parsing contact: invalid contact method: " & cContactMeth, true)
 
     inc pos
-  
-  Maintainer(
-    realName: realName,
-    contacts: contacts
-  )
+
+  Maintainer(realName: realName, contacts: contacts)

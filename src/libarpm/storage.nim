@@ -1,17 +1,17 @@
 import std/[os, options, json], ./[package, io], helpers
 
-const
-  BASE_STORAGE {.strdefine.} = "/etc/arpm.d"
+const BASE_STORAGE {.strdefine.} = "/etc/arpm.d"
 
 proc existsOrCreateStorageDir*(subdirectories: seq[string]) =
   root:
     if not dirExists("/etc/arpm.d"):
       info "Creating storage directory (" & BASE_STORAGE & ")"
       createDir(BASE_STORAGE)
-  
+
     for sub in subdirectories:
       if not dirExists(sub):
-        info "Creating sub-directory in storage directory (" & BASE_STORAGE & '/' & sub & ')'
+        info "Creating sub-directory in storage directory (" & BASE_STORAGE & '/' & sub &
+          ')'
         createDir(BASE_STORAGE / sub)
 
 proc writePackageList*(name: string, data: string) {.inline.} =
@@ -19,23 +19,23 @@ proc writePackageList*(name: string, data: string) {.inline.} =
     existsOrCreateStorageDir(@["repos"])
     writeFile(BASE_STORAGE / "repos" / name & ".argon", data)
 
-proc getPackageList*(
-  name: string
-): Option[string] =
+proc getPackageList*(name: string): Option[string] =
   info "Fetching pre-saved repository: " & name & ".argon"
 
   let path = BASE_STORAGE / "repos" / name & ".argon"
-  
+
   if not fileExists(path):
     warn "Pre-saved repository not found: " & path
     return none(string)
-  
+
   some(readFile(path))
 
 proc createInstalledList*(path: string): string {.inline.} =
   info "Creating installed-package list for the first run!"
 
-  let data = """
+  let
+    data =
+      """
 [
 ]
 """
@@ -45,7 +45,7 @@ proc createInstalledList*(path: string): string {.inline.} =
 
   data
 
-proc getInstalledList*: string =
+proc getInstalledList*(): string =
   let path = BASE_STORAGE / "installed_db.argon"
   if not fileExists(path):
     warn "Could not find list of installed packages: " & path
@@ -74,11 +74,6 @@ proc markAsInstalled*(pkg: Package) =
 
     final = list.parseJson()
 
-    final.add(
-      %* pkg
-    )
+    final.add(%*pkg)
 
-    writeFile(
-      path,
-      $final
-    )
+    writeFile(path, $final)

@@ -27,13 +27,15 @@ type
 proc packageInfo*(data: string): PackageInfo =
   let raw = Toml.decode(data, RawPackageInfo, "info")
 
-  let core = PackageInfoCore(
-    name: raw.package,
-    version: raw.version.parseVersion(),
-    description: raw.description,
-    architecture: raw.architecture,
-    license: raw.license.parseLicense()
-  )
+  let
+    core =
+      PackageInfoCore(
+        name: raw.package,
+        version: raw.version.parseVersion(),
+        description: raw.description,
+        architecture: raw.architecture,
+        license: raw.license.parseLicense(),
+      )
 
   let source = Toml.decode(data, PackageSourceCore, "source")
 

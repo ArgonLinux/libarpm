@@ -1,6 +1,8 @@
 import std/[options, strutils, times, json], package, helpers, ./io, storage
 
-const PKG_LIST_MIRROR {.strdefine.} = "https://raw.githubusercontent.com/ArgonLinux/packages/main/main.json"
+const
+  PKG_LIST_MIRROR {.strdefine.} =
+    "https://raw.githubusercontent.com/ArgonLinux/packages/main/main.json"
 
 type
   PackageList* = ref object
@@ -33,7 +35,7 @@ proc newPackageList*(node: JsonNode): PackageList =
   var revDate, revTime: DateTime
 
   let splittedRev = node["revision_date"].getStr().split(' ')
-  
+
   revDate = splittedRev[0].parse("d/M/YYYY")
   revTime = splittedRev[1].parse("H:m:ss")
 
@@ -42,12 +44,12 @@ proc newPackageList*(node: JsonNode): PackageList =
 
   for pkg in jPackages:
     packages.add package(pkg)
-  
+
   PackageList(
     name: node["name"].getStr(),
     revisionDate: revDate,
     revisionTime: revTime,
-    packages: packages
+    packages: packages,
   )
 
 proc newPackageList*(jstr: string): PackageList {.inline.} =
@@ -65,7 +67,10 @@ proc packageList*(refresh: bool = false): PackageList =
     if file.isSome:
       if not validateJson(file.get()):
         error "Invalid package data saved, send this to Argon Linux maintainers ONLY if it isn't empty and you haven't manually tampered with it."
-        error("If you HAVE tampered with it, good job. You messed something up spectacularly. Run `arpm refresh --force` to re-fetch the list.", true)
+        error(
+          "If you HAVE tampered with it, good job. You messed something up spectacularly. Run `arpm refresh --force` to re-fetch the list.",
+          true
+        )
 
       return newPackageList(file.get())
 
@@ -84,5 +89,5 @@ proc packageList*(refresh: bool = false): PackageList =
     error resp.get()
 
   writePackageList("main", resp.get())
-  
+
   return newPackageList(resp.get())

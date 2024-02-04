@@ -33,17 +33,20 @@ proc warn*(msg: string) =
   stdout.write WARN_COLOR & "WARN" & ' ' & RESET & BOLD & msg & RESET & '\n'
 
 proc ask*(
-  msg: string, 
-  options: array[0..1, string],
-  retryCount: uint64 = uint64.high,
-  caseSensitive: bool = false,
-  
-  arpmRetryCount: uint64 = 0'u64
+    msg: string,
+    options: array[0..1, string],
+    retryCount: uint64 = uint64.high,
+    caseSensitive: bool = false,
+    arpmRetryCount: uint64 = 0'u64,
 ): int =
   ## Ask a question with two options.
-  var answer = readLineFromStdin(
-    YELLOW & " ... " & RESET & BOLD & msg & RESET & " [" & GREEN & options[0].toLowerAscii() & RESET & '/' & RED & options[1].toUpperAscii() & RESET & "] "
-  )
+  var
+    answer =
+      readLineFromStdin(
+        YELLOW & " ... " & RESET & BOLD & msg & RESET & " [" & GREEN &
+          options[0].toLowerAscii() & RESET & '/' & RED & options[1].toUpperAscii() &
+          RESET & "] "
+      )
 
   if not caseSensitive:
     answer = answer.toLowerAscii()
@@ -53,9 +56,9 @@ proc ask*(
         return i
 
     error("Invalid answer: " & answer)
-    
+
     if (arpmRetryCount + 1'u64) < retryCount:
-      return ask(msg, options, retryCount, caseSensitive, arpmRetryCount+1'u64)
+      return ask(msg, options, retryCount, caseSensitive, arpmRetryCount + 1'u64)
     else:
       error("Maximum retries exceeded!", true)
   else:
@@ -65,28 +68,24 @@ proc ask*(
 
     error("Invalid answer: " & answer)
     if (arpmRetryCount + 1'u64) < retryCount:
-      return ask(msg, options, retryCount, caseSensitive, arpmRetryCount+1'u64)
+      return ask(msg, options, retryCount, caseSensitive, arpmRetryCount + 1'u64)
     else:
       error("Maximum retries exceeded!", true)
 
-proc ask*(
-  msg: string
-): string {.inline.} =
+proc ask*(msg: string): string {.inline.} =
   ## Ask a question with any arbitrary input
-  readLineFromStdin(
-    YELLOW & " ... " & RESET & BOLD & msg & RESET & ": "
-  ) 
+  readLineFromStdin(YELLOW & " ... " & RESET & BOLD & msg & RESET & ": ")
 
 proc confirm*(
-  msg: string,
-  retryCount: uint64 = uint64.high,
-
-  arpmRetryCount: uint64 = 0'u64
+    msg: string, retryCount: uint64 = uint64.high, arpmRetryCount: uint64 = 0'u64
 ): bool =
   ## Confirm an action
-  var answer = readLineFromStdin(
-    YELLOW & ".... " & RESET & BOLD & msg & RESET & " [" & GREEN & 'y' & RESET & '/' & RED & 'N' & RESET & "] "
-  ).toLowerAscii()
+  var
+    answer =
+      readLineFromStdin(
+        YELLOW & ".... " & RESET & BOLD & msg & RESET & " [" & GREEN & 'y' & RESET & '/' &
+          RED & 'N' & RESET & "] "
+      ).toLowerAscii()
 
   if answer.len > 1:
     # Interpret yes/no/true/false as y/n/y/n
@@ -101,5 +100,5 @@ proc confirm*(
       answer = "n"
     of "maybe":
       error("You're weird. I don't like you.", true)
-  
+
   answer == "y"

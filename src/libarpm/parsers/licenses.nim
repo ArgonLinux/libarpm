@@ -12,30 +12,31 @@ type
     WTFPL
     Unlicense
     MPL
-    
     OtherFree
     Proprietary
-  
+
   ## The type of freedom you're getting :nerd:
   FreedomType* = enum
-    Libre                    ## "Aggressive" freedom. You may not make proprietary modifications.
-    OSS                      ## General freedom. You can make proprietary modifications.
-    NonFree                  ## Proprietary software. You may not re-distribute it without prior permission from the authors.
+    Libre ## "Aggressive" freedom. You may not make proprietary modifications.
+    OSS ## General freedom. You can make proprietary modifications.
+    NonFree
+      ## Proprietary software. You may not re-distribute it without prior permission from the authors.
 
 const
-  Freedoms*: Table[License, FreedomType] = {
-    GPL2: Libre,
-    GPL3: Libre,
-    LGPL2: Libre,
-    LGPL3: Libre,
-    MIT: OSS,
-    BSD3: OSS,
-    WTFPL: OSS,
-    MPL: OSS,
-    Unlicense: OSS,
-    OtherFree: OSS,
-    Proprietary: NonFree
-  }.toTable
+  Freedoms*: Table[License, FreedomType] =
+    {
+      GPL2: Libre,
+      GPL3: Libre,
+      LGPL2: Libre,
+      LGPL3: Libre,
+      MIT: OSS,
+      BSD3: OSS,
+      WTFPL: OSS,
+      MPL: OSS,
+      Unlicense: OSS,
+      OtherFree: OSS,
+      Proprietary: NonFree
+    }.toTable
 
 proc `$`*(license: License): string =
   ## Turn a license into a string
@@ -89,7 +90,10 @@ proc parseLicense*(license: string): License =
   of "unlicense":
     return Unlicense
   else:
-    error("Invalid license string: " & license & " (expected GPL2, GPL3, MIT, BSD3, WTFPL, Proprietary, OSS, MPL)")
+    error(
+      "Invalid license string: " & license &
+        " (expected GPL2, GPL3, MIT, BSD3, WTFPL, Proprietary, OSS, MPL)"
+    )
 
 proc isLibre*(license: License | string): bool {.inline.} =
   ## Is this license libre?
@@ -98,7 +102,7 @@ proc isLibre*(license: License | string): bool {.inline.} =
   ## TL;DR, very stupid and probably incomplete explanation
   ## - Freedom to modify, redistribute the program as you want
   ## - No changes may be kept proprietary/in-house
-  
+
   when license is string:
     return Freedoms[parseLicense(license)] == Libre
 
@@ -108,7 +112,7 @@ proc isLibre*(license: License | string): bool {.inline.} =
 proc isOss*(license: License | string): bool {.inline.} =
   ## Is this license open-source?
   ## https://opensource.org/licenses/
-  
+
   when license is string:
     return Freedoms[parseLicense(license)] == OSS
 
@@ -118,9 +122,9 @@ proc isOss*(license: License | string): bool {.inline.} =
 proc isProprietary*(license: License | string): bool {.inline.} =
   ## This computational maneuver could cost us legal fees!
   ## nah, jk, who's gonna go around sueing random idiots? ;)
-  
+
   when license is string:
     return parseLicense(license) == Proprietary
-  
+
   when license is License:
     return license == Proprietary

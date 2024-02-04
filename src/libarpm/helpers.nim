@@ -2,14 +2,16 @@
 
 import std/[os, times, options, httpclient, streams, strutils, json], ./io, semver
 
-const 
+const
   NimblePkgVersion {.strdefine.} = "???"
   LibarpmVersion* = NimblePkgVersion
 
 proc `$`*(ver: Version): string =
   ## Convert a semantic version into a nice looking string
 
-  result = GREEN & $ver.major & RESET & BOLD & '.' & RESET & GREEN & $ver.minor & RESET & BOLD & '.' & RESET & GREEN & $ver.patch & RESET
+  result =
+    GREEN & $ver.major & RESET & BOLD & '.' & RESET & GREEN & $ver.minor & RESET & BOLD &
+    '.' & RESET & GREEN & $ver.patch & RESET
 
   if ver.build.len > 0:
     result &= BOLD & '-' & RESET & YELLOW & ver.build & RESET
@@ -20,7 +22,9 @@ proc `$`*(ver: Version): string =
 proc redString*(ver: Version): string =
   ## Convert a semantic version into an evil looking string D:
 
-  result = RED & $ver.major & RESET & BOLD & '.' & RESET & RED & $ver.minor & RESET & BOLD & '.' & RESET & RED & $ver.patch & RESET
+  result =
+    RED & $ver.major & RESET & BOLD & '.' & RESET & RED & $ver.minor & RESET & BOLD & '.' &
+    RESET & RED & $ver.patch & RESET
 
   if ver.build.len > 0:
     result &= BOLD & '-' & RESET & YELLOW & ver.build & RESET
@@ -40,15 +44,15 @@ proc httpGet*(url: string): Option[string] =
     error "Server responded with non-200 response code: " & $resp.code.int
     return none(string)
 
-  info "Request succeeded in " & $((cpuTime()-start)) & " ms!"
+  info "Request succeeded in " & $((cpuTime() - start)) & " ms!"
   return some(resp.bodyStream.readAll())
 
 proc urlExists*(url: string): bool =
   ## Check if an endpoint returns 200
-  let httpClient = newHttpClient(userAgent="libarpm/" & NimblePkgVersion)
+  let httpClient = newHttpClient(userAgent = "libarpm/" & NimblePkgVersion)
 
   let resp = httpClient.get(url)
-  
+
   echo resp.code.int
   resp.code.int == 200
 
@@ -73,12 +77,7 @@ proc version*(data: JsonNode): Version =
     build = data["build"].getStr()
     metadata = data["metadata"].getStr()
 
-  newVersion(
-    major,
-    minor,
-    patch,
-    build, metadata
-  )
+  newVersion(major, minor, patch, build, metadata)
 
 template root*(body: untyped) =
   ## This pragma ensures that any function it is attached to will not run, unless the process is privileged.
@@ -90,6 +89,9 @@ template root*(body: untyped) =
   ## # This will crash gracefully if we're not running as root :^)
   ## adminStuff()
   if not isAdmin():
-    error("Function requires root privileges. Run with `sudo`, `doas` or another privilege escalation program to continue.", true)
+    error(
+      "Function requires root privileges. Run with `sudo`, `doas` or another privilege escalation program to continue.",
+      true
+    )
 
   body
