@@ -146,7 +146,7 @@ proc package*(node: JsonNode): Package =
     depends.add getStr(d)
 
   for p in rawProvides:
-    depends.add getStr(p)
+    provides.add getStr(p) # god damn it, we don't depend on what we provide!
 
   for od in rawOptionalDepends:
     optionalDepends.add getStr(od)
