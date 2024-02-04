@@ -6,6 +6,9 @@ proc solveDependencies*(
 ): seq[Package] =
   var deps: seq[Package] = @[]
 
+  when not defined(release):
+    echo package.depends
+
   for dep in package.depends:
     let pkg = list.getPackage(dep)
     if not pkg.isSome:
@@ -17,8 +20,8 @@ proc solveDependencies*(
       subpkg
     )
 
-    when not defined(release):
-      info("Dependency for " & package.name & ": " & subpkg.name)
+    #[when not defined(release):
+      info("Dependency for " & package.name & ": " & subpkg.name)]#
 
     let subdeps = solveDependencies(subpkg, list)
 
