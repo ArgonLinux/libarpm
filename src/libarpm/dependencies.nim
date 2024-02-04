@@ -17,7 +17,8 @@ proc solveDependencies*(
       subpkg
     )
 
-    info(package.name & " -> " & subpkg.name)
+    when not defined(release):
+      info("Dependency for " & package.name & ": " & subpkg.name)
 
     let subdeps = solveDependencies(subpkg, list)
 
