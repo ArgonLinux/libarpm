@@ -1,4 +1,4 @@
-import std/options, ./[package, package_list, helpers, io]
+import std/options, ./[package, package_list, io]
 
 proc solveDependencies*(
   package: Package,
@@ -12,12 +12,12 @@ proc solveDependencies*(
       error("Dependency unfullfilled for package \"" & package.name & "\": " & dep)
       error("If this is a package from the official repositories, report it to arpm developers!", true)
     
-    let package = get(pkg)
+    let subpkg = get(pkg)
     deps.add(
-      package
+      subpkg
     )
 
-    let subdeps = solveDependencies(package, list)
+    let subdeps = solveDependencies(subpkg, list)
 
     deps &= subdeps
 
