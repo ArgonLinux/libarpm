@@ -1,6 +1,6 @@
 # Package
 
-version       = "0.1.1"
+version       = "0.1.2"
 author        = "xTrayambak"
 description   = "The underlying core of Argon's package manager"
 license       = "GPL-2.0-only"
